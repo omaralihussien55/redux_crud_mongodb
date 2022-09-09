@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { addCrud, editCrud, getCrud } from '../reducer/CrudSlice'
+import { setAdddCrud,setEditCrud } from '../reducer/CrudSlice'
 
 const Form = ({dispatch,showEdit,setEhowEdit}) => {
-  const {Detailscrud} = useSelector((state)=> state.crud)
+  const {Detailscrud,crudArray} = useSelector((state)=> state.crud)
   const [titel,setTitel ] = useState( Detailscrud.title )
   const [disc,setDisc ] = useState( Detailscrud.discription )
   const RefTitel = useRef(null)
@@ -28,27 +28,47 @@ useEffect(()=>{
 
    e.preventDefault()
    let crud = {
+    _id: crudArray.length + 1,
     title:titel,
     discription:disc
    }
 
-  dispatch(addCrud(crud))
-  setEhowEdit(false)
-  //  navigate("/")
-   window.location="/"
+   dispatch(setAdddCrud(crud))
+   setEhowEdit(false)
+   setTitel("")
+   setDisc("")
+  // dispatch(addCrud(crud))
+  
+
     }
 
    const  HandleSubmitEdit = (e)=>{
     e.preventDefault()
-    let crud = {
-     title:titel,
-     discription:disc
-    }
- 
-   dispatch(editCrud({id:Detailscrud._id,data:crud}))
+let item =crudArray.length >= 1&& crudArray.map((i)=>{
+  if(i._id === Detailscrud._id ){
+    console.log("true")
+      return {...i,title:titel,discription:disc}
+  }else{
+    return i
+  }
+})
+console.log(item)
+
+
+dispatch(setEditCrud(item))
+setDisc("")
+setTitel("")
+    setEhowEdit(false)
+    // let crud = {
+     
+    //  title:titel,
+    //  discription:disc
+    // }
+    
+  //  dispatch(editCrud({id:Detailscrud._id,data:crud}))
   //  navigate("/")
-  setEhowEdit(false)
-  window.location="/"
+  
+
      }
 
     
